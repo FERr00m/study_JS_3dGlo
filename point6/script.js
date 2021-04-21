@@ -1,3 +1,4 @@
+// eslint-disable-next-line strict
 'use strict';
 
 const declensionOfEndings = function(number, one, two, five) {
