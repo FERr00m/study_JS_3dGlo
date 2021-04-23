@@ -48,23 +48,20 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  countTimer('24 april 2021');
+  countTimer('29 april 2021');
 
   //меню
   const toggleMenu = () => {
-    const btnMenu = document.querySelector('.menu'),
-      menu = document.querySelector('menu');
-
-    const handlerMenu = event => {
+    const menu = document.querySelector('menu');
+    document.body.addEventListener('click', event => {
       const target = event.target;
-      if (target.tagName === 'A') {
-        menu.classList.toggle('active-menu');
+      if (target.closest('.menu')) {
+        menu.classList.add('active-menu');
+      } else if (target === menu || target.tagName === 'LI') {
+        return;
+      } else {
+        menu.classList.remove('active-menu');
       }
-    };
-
-    btnMenu.addEventListener('click', () => {
-      menu.classList.toggle('active-menu');
-      menu.addEventListener('click', handlerMenu);
     });
   };
   toggleMenu();
