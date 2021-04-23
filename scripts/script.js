@@ -53,19 +53,20 @@ window.addEventListener('DOMContentLoaded', () => {
   //меню
   const toggleMenu = () => {
     const btnMenu = document.querySelector('.menu'),
-      menu = document.querySelector('menu'),
-      closeBtn = document.querySelector('.close-btn'),
-      menuItems = menu.querySelectorAll('ul>li');
+      menu = document.querySelector('menu');
 
-    const handlerMenu = () => {
-      menu.classList.toggle('active-menu');
+    const handlerMenu = event => {
+      const target = event.target;
+      if (target.tagName === 'A') {
+        menu.classList.toggle('active-menu');
+      }
     };
 
-    btnMenu.addEventListener('click', handlerMenu);
-    closeBtn.addEventListener('click', handlerMenu);
-    menuItems.forEach(elem => elem.addEventListener('click', handlerMenu));
+    btnMenu.addEventListener('click', () => {
+      menu.classList.toggle('active-menu');
+      menu.addEventListener('click', handlerMenu);
+    });
   };
-
   toggleMenu();
 
   //popup
@@ -111,6 +112,20 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
   togglePopUp();
+
+  //smoothScroll
+  const scrollLinks = document.querySelectorAll('.scroll-link');
+
+  scrollLinks.forEach(item => {
+    item.addEventListener('click', event => {
+      event.preventDefault();
+      const id = item.getAttribute('href');
+      document.querySelector(id).scrollIntoView({
+        behavior: 'smooth',
+        block: 'start',
+      });
+    });
+  });
 
   //tabs
   const tabs = () => {
