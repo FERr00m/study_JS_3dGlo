@@ -48,23 +48,20 @@ window.addEventListener('DOMContentLoaded', () => {
     }
   }
 
-  countTimer('23 april 2021');
+  countTimer('29 april 2021');
 
   //меню
   const toggleMenu = () => {
-    const btnMenu = document.querySelector('.menu'),
-      menu = document.querySelector('menu');
-
-    const handlerMenu = event => {
+    const menu = document.querySelector('menu');
+    document.body.addEventListener('click', event => {
       const target = event.target;
-      if (target.tagName === 'A') {
-        menu.classList.toggle('active-menu');
+      if (target.closest('.menu')) {
+        menu.classList.add('active-menu');
+      } else if (target === menu || target.tagName === 'LI') {
+        return;
+      } else {
+        menu.classList.remove('active-menu');
       }
-    };
-
-    btnMenu.addEventListener('click', () => {
-      menu.classList.toggle('active-menu');
-      menu.addEventListener('click', handlerMenu);
     });
   };
   toggleMenu();
@@ -73,7 +70,6 @@ window.addEventListener('DOMContentLoaded', () => {
   const togglePopUp = () => {
     const popup = document.querySelector('.popup'),
       popupBtn = document.querySelectorAll('.popup-btn'),
-      popupClose = document.querySelector('.popup-close'),
       popupContent = document.querySelector('.popup-content');
 
     const animate = ({ timing, draw, duration }) => {
@@ -107,8 +103,16 @@ window.addEventListener('DOMContentLoaded', () => {
       });
     });
 
-    popupClose.addEventListener('click', () => {
-      popup.style.display = 'none';
+    popup.addEventListener('click', event => {
+      let target = event.target;
+      if (target.classList.contains('popup-close')) {
+        popup.style.display = 'none';
+      } else {
+        target = target.closest('.popup-content');
+        if (!target) {
+          popup.style.display = 'none';
+        }
+      }
     });
   };
   togglePopUp();
@@ -159,4 +163,100 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   };
   tabs();
+
+  //Slider
+
+  const slider = () => {
+    const slide = document.querySelectorAll('.portfolio-item'),
+      //btn = document.querySelectorAll('.portfolio-btn'),
+      dots = document.querySelector('.portfolio-dots'),
+      slider = document.querySelector('.portfolio-content');
+
+    for (let i = 0; i < slide.length; i++) {
+      const element = document.createElement('li');
+      element.classList.add('dot');
+      dots.append(element);
+    }
+    const dot = document.querySelectorAll('.dot');
+    dot[0].classList.add('dot-active');
+    let currentSlide = 0,
+      interval;
+
+    const prevSlide = (elem, index, strClass) => {
+      elem[index].classList.remove(strClass);
+    };
+
+    const nextSlide = (elem, index, strClass) => {
+      elem[index].classList.add(strClass);
+    };
+
+    const autoPlaySlide = () => {
+      prevSlide(slide, currentSlide, 'portfolio-item-active');
+      prevSlide(dot, currentSlide, 'dot-active');
+      currentSlide++;
+      if (currentSlide >= slide.length) {
+        currentSlide = 0;
+      }
+      nextSlide(slide, currentSlide, 'portfolio-item-active');
+      nextSlide(dot, currentSlide, 'dot-active');
+    };
+
+    const startSlide = (time = 1500) => {
+      interval = setInterval(autoPlaySlide, time);
+    };
+
+    const stopSlide = () => {
+      clearInterval(interval);
+    };
+
+    slider.addEventListener('click', event => {
+      event.preventDefault();
+
+      const target = event.target;
+
+      if (!target.matches('.portfolio-btn, .dot')) {
+        return;
+      }
+
+      prevSlide(slide, currentSlide, 'portfolio-item-active');
+      prevSlide(dot, currentSlide, 'dot-active');
+
+      if (target.matches('#arrow-right')) {
+        currentSlide++;
+      } else if (target.matches('#arrow-left')) {
+        currentSlide--;
+      } else if (target.matches('.dot')) {
+        dot.forEach((elem, index) => {
+          if (elem === target) {
+            currentSlide = index;
+          }
+        });
+      }
+
+      if (currentSlide >= slide.length) {
+        currentSlide = 0;
+      }
+
+      if (currentSlide < 0) {
+        currentSlide = slide.length - 1;
+      }
+      nextSlide(slide, currentSlide, 'portfolio-item-active');
+      nextSlide(dot, currentSlide, 'dot-active');
+    });
+
+    slider.addEventListener('mouseover', event => {
+      if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+        stopSlide();
+      }
+    });
+
+    slider.addEventListener('mouseout', event => {
+      if (event.target.matches('.portfolio-btn') || event.target.matches('.dot')) {
+        startSlide();
+      }
+    });
+    startSlide(1500);
+  };
+
+  slider();
 });
