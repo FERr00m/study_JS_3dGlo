@@ -259,4 +259,89 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   slider();
+
+  //наша команда
+
+  const command = document.getElementById('command'),
+    commandImg = command.querySelectorAll('.command__photo');
+  commandImg.forEach(item => {
+    item.addEventListener('mouseenter', event => {
+      const srcImage = event.target.src;
+      event.target.src = event.target.dataset.img;
+      event.target.dataset.img = srcImage;
+    });
+    item.addEventListener('mouseout', event => {
+      const srcImage = event.target.src;
+      event.target.src = event.target.dataset.img;
+      event.target.dataset.img = srcImage;
+    });
+  });
+
+  //калькулятор валидация
+
+  const inputsCalc = document.querySelectorAll('.calc-block>input');
+
+  inputsCalc.forEach(item => {
+    item.addEventListener('input', () => {
+      item.value = item.value.replace(/\D/g, '');
+    });
+  });
+
+  //форма валидация
+
+  const form2 = document.getElementById('form2');
+
+  const checkFunc = str => {
+    str = str.trim();
+    str = str.replace(/ {2,}/g, ' ');
+    str = str.replace(/-{2,}/g, '-');
+    return str;
+  };
+
+  const checkHyphenSpace = str => {
+    str = str.trim();
+    str = str.replace(/^-*/, '');
+    str = str.replace(/-*$/, '');
+    return str;
+  };
+
+  const checkName = str => {
+    const tmpStr = str.split(' ');
+    tmpStr.forEach((item, i) => {
+      if (/.*-.*/.test(item)) {
+        const tmpItem = item.split('-'),
+          tmpArr = [];
+        tmpItem.forEach(item => {
+          tmpArr.push(item.slice(0, 1).toUpperCase() + item.slice(1).toLowerCase());
+        });
+        tmpStr[i] = tmpArr.join('-');
+      } else {
+        tmpStr[i] = item.slice(0, 1).toUpperCase() + item.slice(1).toLowerCase();
+      }
+    });
+    return tmpStr.join(' ');
+  };
+
+  form2.addEventListener('input', e => {
+    const target = e.target;
+    if (target.id === 'form2-name' || target.id === 'form2-message') {
+      target.value = target.value.replace(/[^а-я\- ]/gi, '');
+      target.onblur = () => {
+        target.value = checkFunc(checkHyphenSpace(target.value));
+        if (target.id === 'form2-name') {
+          target.value = checkName(target.value);
+        }
+      };
+    } else if (target.id === 'form2-email') {
+      target.value = target.value.replace(/[^a-z@\-_.!~*']/gi, '');
+      target.onblur = () => {
+        target.value = checkFunc(checkHyphenSpace(target.value));
+      };
+    } else if (target.id === 'form2-phone') {
+      target.value = target.value.replace(/[^0-9()-]/gi, '');
+      target.onblur = () => {
+        target.value = checkFunc(checkHyphenSpace(target.value));
+      };
+    }
+  });
 });
