@@ -289,7 +289,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
   //форма валидация
 
-  const form2 = document.getElementById('form2');
+  const form2Message = document.getElementById('form2-message'),
+    userName = document.querySelectorAll('input[name="user_name"]'),
+    userMail = document.querySelectorAll('input[name="user_email"]'),
+    userPhone = document.querySelectorAll('input[name="user_phone"]');
 
   const checkFunc = str => {
     str = str.trim();
@@ -322,26 +325,38 @@ window.addEventListener('DOMContentLoaded', () => {
     return tmpStr.join(' ');
   };
 
-  form2.addEventListener('input', e => {
-    const target = e.target;
-    if (target.id === 'form2-name' || target.id === 'form2-message') {
-      target.value = target.value.replace(/[^а-я\- ]/gi, '');
-      target.onblur = () => {
-        target.value = checkFunc(checkHyphenSpace(target.value));
-        if (target.id === 'form2-name') {
-          target.value = checkName(target.value);
-        }
+  userName.forEach(item => {
+    item.addEventListener('input', () => {
+      item.value = item.value.replace(/[^а-я\- ]/gi, '');
+      item.onblur = () => {
+        item.value = checkFunc(checkHyphenSpace(item.value));
+        item.value = checkName(item.value);
       };
-    } else if (target.id === 'form2-email') {
-      target.value = target.value.replace(/[^a-z@\-_.!~*']/gi, '');
-      target.onblur = () => {
-        target.value = checkFunc(checkHyphenSpace(target.value));
+    });
+  });
+
+  userMail.forEach(item => {
+    item.addEventListener('input', () => {
+      item.value = item.value.replace(/[^a-z@\-_.!~*']/gi, '');
+      item.onblur = () => {
+        item.value = checkFunc(checkHyphenSpace(item.value));
       };
-    } else if (target.id === 'form2-phone') {
-      target.value = target.value.replace(/[^0-9()-]/gi, '');
-      target.onblur = () => {
-        target.value = checkFunc(checkHyphenSpace(target.value));
+    });
+  });
+
+  userPhone.forEach(item => {
+    item.addEventListener('input', () => {
+      item.value = item.value.replace(/[^0-9()-]/gi, '');
+      item.onblur = () => {
+        item.value = checkFunc(checkHyphenSpace(item.value));
       };
-    }
+    });
+  });
+
+  form2Message.addEventListener('input', () => {
+    form2Message.value = form2Message.value.replace(/[^а-я\- ]/gi, '');
+    form2Message.onblur = () => {
+      form2Message.value = checkFunc(checkHyphenSpace(form2Message.value));
+    };
   });
 });
