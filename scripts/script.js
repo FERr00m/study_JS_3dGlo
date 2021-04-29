@@ -93,11 +93,11 @@ window.addEventListener('DOMContentLoaded', () => {
           popup.style.display = 'block';
         } else {
           popup.style.display = 'block';
-          popupContent.style.top = '-30%';
+          popupContent.style.top = '-60%';
           animate({
             duration: 700,
-            timing: timeFraction => (Math.pow(timeFraction, 2) - 1.5),
-            draw: progress => popupContent.style.top = (progress * 60 + 40) + '%',
+            timing: timeFraction => (Math.pow(timeFraction, 2) - 1.15),
+            draw: progress => popupContent.style.top = (progress * 80 + 40) + '%',
           });
         }
       });
@@ -373,16 +373,24 @@ window.addEventListener('DOMContentLoaded', () => {
       totalValue = document.getElementById('total');
 
     //calcanimation
-    const time = 1000, //ms
-      step = 100;
+    const time = 500, //ms
+      step = 10;
 
     const outNum = num => {
+      calcType.disabled = true;
+      calcSquare.disabled = true;
+      calcDay.disabled = true;
+      calcCount.disabled = true;
       let n = 0;
-      const t = Math.round(time / (num / step)),
+      const t = time / (num / step),
         l = totalValue;
       const interval = setInterval(() => {
         n += step;
         if (n === num) {
+          calcType.disabled = false;
+          calcSquare.disabled = false;
+          calcDay.disabled = false;
+          calcCount.disabled = false;
           clearInterval(interval);
         }
         l.textContent = n;
@@ -415,6 +423,14 @@ window.addEventListener('DOMContentLoaded', () => {
 
     calcBlock.addEventListener('change', event => {
       const target = event.target;
+      console.log(calcType.value);
+      //console.dir(target);
+      if (calcType.value === '') {
+        calcSquare.value = '';
+        calcDay.value = '';
+        calcCount.value = '';
+        totalValue.textContent = '0';
+      }
 
       if (target.matches('select') || target.matches('input')) {
         countSum();
