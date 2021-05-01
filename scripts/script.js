@@ -373,29 +373,22 @@ window.addEventListener('DOMContentLoaded', () => {
       totalValue = document.getElementById('total');
 
     //calcanimation
-    const time = 500, //ms
-      step = 10;
 
-    const outNum = num => {
-      calcType.disabled = true;
-      calcSquare.disabled = true;
-      calcDay.disabled = true;
-      calcCount.disabled = true;
-      let n = 0;
-      const t = time / (num / step),
-        l = totalValue;
+    const updateCounter = num => {
+      totalValue.innerText = '0';
+      const target = num,
+        increment = 100;
+      let total = +totalValue.innerText;
+
       const interval = setInterval(() => {
-        n += step;
-        if (n === num) {
-          calcType.disabled = false;
-          calcSquare.disabled = false;
-          calcDay.disabled = false;
-          calcCount.disabled = false;
+        if (total < target) {
+          totalValue.innerText = total;
+          total += increment;
+        } else {
+          totalValue.innerText = target;
           clearInterval(interval);
         }
-        l.textContent = n;
-      },
-      t);
+      }, 10);
     };
 
     const countSum = () => {
@@ -417,14 +410,13 @@ window.addEventListener('DOMContentLoaded', () => {
       if (typeValue && squareValue) {
         total = price * typeValue * squareValue * countValue * dayValue;
         total = Math.round(total);
-        outNum(total);
+        updateCounter(total);
       }
     };
 
     calcBlock.addEventListener('change', event => {
       const target = event.target;
       console.log(calcType.value);
-      //console.dir(target);
       if (calcType.value === '') {
         calcSquare.value = '';
         calcDay.value = '';
