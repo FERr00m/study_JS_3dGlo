@@ -201,7 +201,7 @@ window.addEventListener('DOMContentLoaded', () => {
       nextSlide(dot, currentSlide, 'dot-active');
     };
 
-    const startSlide = (time = 1500) => {
+    const startSlide = (time = 5000) => {
       interval = setInterval(autoPlaySlide, time);
     };
 
@@ -255,7 +255,7 @@ window.addEventListener('DOMContentLoaded', () => {
         startSlide();
       }
     });
-    startSlide(1500);
+    startSlide(5000);
   };
 
   slider();
@@ -264,6 +264,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const command = document.getElementById('command'),
     commandImg = command.querySelectorAll('.command__photo');
+
   commandImg.forEach(item => {
     item.addEventListener('mouseenter', event => {
       const srcImage = event.target.src;
@@ -287,78 +288,78 @@ window.addEventListener('DOMContentLoaded', () => {
     });
   });
 
-  //форма валидация
+  //формы валидация
 
-  const form2Message = document.getElementById('form2-message'),
-    userName = document.querySelectorAll('input[name="user_name"]'),
-    userMail = document.querySelectorAll('input[name="user_email"]'),
-    userPhone = document.querySelectorAll('input[name="user_phone"]');
+  // const form2Message = document.getElementById('form2-message'),
+  //   userName = document.querySelectorAll('input[name="user_name"]'),
+  //   userMail = document.querySelectorAll('input[name="user_email"]'),
+  //   userPhone = document.querySelectorAll('input[name="user_phone"]');
 
-  const checkFunc = str => {
-    str = str.trim();
-    str = str.replace(/ {2,}/g, ' ');
-    str = str.replace(/-{2,}/g, '-');
-    return str;
-  };
+  // const checkFunc = str => {
+  //   str = str.trim();
+  //   str = str.replace(/ {2,}/g, ' ');
+  //   str = str.replace(/-{2,}/g, '-');
+  //   return str;
+  // };
 
-  const checkHyphenSpace = str => {
-    str = str.trim();
-    str = str.replace(/^-*/, '');
-    str = str.replace(/-*$/, '');
-    return str;
-  };
+  // const checkHyphenSpace = str => {
+  //   str = str.trim();
+  //   str = str.replace(/^-*/, '');
+  //   str = str.replace(/-*$/, '');
+  //   return str;
+  // };
 
-  const checkName = str => {
-    const tmpStr = str.split(' ');
-    tmpStr.forEach((item, i) => {
-      if (/.*-.*/.test(item)) {
-        const tmpItem = item.split('-'),
-          tmpArr = [];
-        tmpItem.forEach(item => {
-          tmpArr.push(item.slice(0, 1).toUpperCase() + item.slice(1).toLowerCase());
-        });
-        tmpStr[i] = tmpArr.join('-');
-      } else {
-        tmpStr[i] = item.slice(0, 1).toUpperCase() + item.slice(1).toLowerCase();
-      }
-    });
-    return tmpStr.join(' ');
-  };
+  // const checkName = str => {
+  //   const tmpStr = str.split(' ');
+  //   tmpStr.forEach((item, i) => {
+  //     if (/.*-.*/.test(item)) {
+  //       const tmpItem = item.split('-'),
+  //         tmpArr = [];
+  //       tmpItem.forEach(item => {
+  //         tmpArr.push(item.slice(0, 1).toUpperCase() + item.slice(1).toLowerCase());
+  //       });
+  //       tmpStr[i] = tmpArr.join('-');
+  //     } else {
+  //       tmpStr[i] = item.slice(0, 1).toUpperCase() + item.slice(1).toLowerCase();
+  //     }
+  //   });
+  //   return tmpStr.join(' ');
+  // };
 
-  userName.forEach(item => {
-    item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^а-я\- ]/gi, '');
-      item.onblur = () => {
-        item.value = checkFunc(checkHyphenSpace(item.value));
-        item.value = checkName(item.value);
-      };
-    });
-  });
+  // userName.forEach(item => {
+  //   item.addEventListener('input', () => {
+  //     item.value = item.value.replace(/[^а-я\- ]/gi, '');
+  //     item.onblur = () => {
+  //       item.value = checkFunc(checkHyphenSpace(item.value));
+  //       item.value = checkName(item.value);
+  //     };
+  //   });
+  // });
 
-  userMail.forEach(item => {
-    item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^a-z@\-_.!~*']/gi, '');
-      item.onblur = () => {
-        item.value = checkFunc(checkHyphenSpace(item.value));
-      };
-    });
-  });
+  // userMail.forEach(item => {
+  //   item.addEventListener('input', () => {
+  //     item.value = item.value.replace(/[^a-z@\-_.!~*']/gi, '');
+  //     item.onblur = () => {
+  //       item.value = checkFunc(checkHyphenSpace(item.value));
+  //     };
+  //   });
+  // });
 
-  userPhone.forEach(item => {
-    item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^0-9()-]/gi, '');
-      item.onblur = () => {
-        item.value = checkFunc(checkHyphenSpace(item.value));
-      };
-    });
-  });
+  // userPhone.forEach(item => {
+  //   item.addEventListener('input', () => {
+  //     item.value = item.value.replace(/[^0-9()-]/gi, '');
+  //     item.onblur = () => {
+  //       item.value = checkFunc(checkHyphenSpace(item.value));
+  //     };
+  //   });
+  // });
 
-  form2Message.addEventListener('input', () => {
-    form2Message.value = form2Message.value.replace(/[^а-я\- ]/gi, '');
-    form2Message.onblur = () => {
-      form2Message.value = checkFunc(checkHyphenSpace(form2Message.value));
-    };
-  });
+  // form2Message.addEventListener('input', () => {
+  //   form2Message.value = form2Message.value.replace(/[^а-я\- ]/gi, '');
+  //   form2Message.onblur = () => {
+  //     form2Message.value = checkFunc(checkHyphenSpace(form2Message.value));
+  //   };
+  // });
 
   //calculator
 
@@ -407,6 +408,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
       if (calcCount.value > 1) {
         countValue += (calcCount.value - 1) / 10;
+        console.log(countValue);
       }
 
       if (calcDay.value && calcDay.value < 5) {
@@ -423,8 +425,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
     calcBlock.addEventListener('change', event => {
       const target = event.target;
-      console.log(calcType.value);
-      //console.dir(target);
+
       if (calcType.value === '') {
         calcSquare.value = '';
         calcDay.value = '';
