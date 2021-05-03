@@ -327,7 +327,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   userName.forEach(item => {
     item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^а-я\- ]/gi, '');
+      item.value = item.value.replace(/[^а-я ]/gi, '');
       item.onblur = () => {
         item.value = checkFunc(checkHyphenSpace(item.value));
         item.value = checkName(item.value);
@@ -354,7 +354,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   form2Message.addEventListener('input', () => {
-    form2Message.value = form2Message.value.replace(/[^а-я\- ]/gi, '');
+    form2Message.value = form2Message.value.replace(/[a-z]/gi, '');
     form2Message.onblur = () => {
       form2Message.value = checkFunc(checkHyphenSpace(form2Message.value));
     };
