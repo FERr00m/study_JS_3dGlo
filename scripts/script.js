@@ -93,11 +93,11 @@ window.addEventListener('DOMContentLoaded', () => {
           popup.style.display = 'block';
         } else {
           popup.style.display = 'block';
-          popupContent.style.top = '-30%';
+          popupContent.style.top = '-60%';
           animate({
             duration: 700,
-            timing: timeFraction => (Math.pow(timeFraction, 2) - 1.5),
-            draw: progress => popupContent.style.top = (progress * 60 + 40) + '%',
+            timing: timeFraction => (Math.pow(timeFraction, 2) - 1.15),
+            draw: progress => popupContent.style.top = (progress * 80 + 40) + '%',
           });
         }
       });
@@ -346,7 +346,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   userPhone.forEach(item => {
     item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^0-9()-]/gi, '');
+      item.value = item.value.replace(/[^+0-9()-]/gi, '');
       item.onblur = () => {
         item.value = checkFunc(checkHyphenSpace(item.value));
       };
@@ -362,6 +362,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   //calculator
 
+
   const calc = (price = 100) => {
 
     const calcBlock = document.querySelector('.calc-block'),
@@ -371,6 +372,24 @@ window.addEventListener('DOMContentLoaded', () => {
       calcCount = document.querySelector('.calc-count'),
       totalValue = document.getElementById('total');
 
+    //calcanimation
+
+    const updateCounter = num => {
+      totalValue.innerText = '0';
+      const target = num,
+        increment = 500;
+      let total = +totalValue.innerText;
+
+      const interval = setInterval(() => {
+        if (total < target) {
+          totalValue.innerText = total;
+          total += increment;
+        } else {
+          totalValue.innerText = target;
+          clearInterval(interval);
+        }
+      }, 10);
+    };
 
     const countSum = () => {
       let total = 0,
@@ -390,12 +409,20 @@ window.addEventListener('DOMContentLoaded', () => {
       }
       if (typeValue && squareValue) {
         total = price * typeValue * squareValue * countValue * dayValue;
+        total = Math.round(total);
+        updateCounter(total);
       }
-
-      totalValue.textContent = Math.round(total);
     };
+
     calcBlock.addEventListener('change', event => {
       const target = event.target;
+      console.log(calcType.value);
+      if (calcType.value === '') {
+        calcSquare.value = '';
+        calcDay.value = '';
+        calcCount.value = '';
+        totalValue.textContent = '0';
+      }
 
       if (target.matches('select') || target.matches('input')) {
         countSum();
@@ -404,4 +431,116 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   calc(100);
+
+  //send-ajax-form
+
+  const sendForm = () => {
+    const errorMessage = 'Что-то пошло не так...',
+      loadMessage = 'Загрузка...',
+      successMessage = 'Спасибо, мы скоро с вами свяжемся!';
+
+    const form1 = document.getElementById('form1'),
+      form2 = document.getElementById('form2'),
+      form3 = document.getElementById('form3');
+
+    const statusMessage = document.createElement('div');
+    statusMessage.style.cssText = `
+    font-size: 2rem; 
+    color: #fff;`;
+
+    const clearInputs = form => {
+      for (const input of form) {
+        if (input.tagName === 'INPUT') {
+          input.value = '';
+        }
+      }
+    };
+
+    form1.addEventListener('submit', event => {
+      event.preventDefault();
+      form1.appendChild(statusMessage);
+      statusMessage.textContent = loadMessage;
+      const formData = new FormData(form1),
+        body = {};
+
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      postData(body, () => {
+        statusMessage.textContent = successMessage;
+        clearInputs(form1);
+      }, error => {
+        statusMessage.textContent = errorMessage;
+        clearInputs(form1);
+        console.error(error);
+      });
+    });
+
+    form2.addEventListener('submit', event => {
+      event.preventDefault();
+      form2.appendChild(statusMessage);
+      statusMessage.textContent = loadMessage;
+      const formData = new FormData(form2),
+        body = {};
+
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      postData(body, () => {
+        statusMessage.textContent = successMessage;
+        clearInputs(form2);
+      }, error => {
+        statusMessage.textContent = errorMessage;
+        clearInputs(form2);
+        console.error(error);
+      });
+    });
+
+    form3.addEventListener('submit', event => {
+      event.preventDefault();
+      form3.appendChild(statusMessage);
+      statusMessage.textContent = loadMessage;
+      const formData = new FormData(form3),
+        body = {};
+
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      postData(body, () => {
+        statusMessage.textContent = successMessage;
+        clearInputs(form3);
+      }, error => {
+        statusMessage.textContent = errorMessage;
+        clearInputs(form3);
+        console.error(error);
+      });
+    });
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+
+      request.addEventListener('readystatechange', () => {
+
+        if (request.readyState !== 4) {
+          return;
+        }
+
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+
+        }
+      });
+
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(body));
+    };
+  };
+
+  sendForm();
 });
