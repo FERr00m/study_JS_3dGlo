@@ -327,7 +327,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   userName.forEach(item => {
     item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^а-я\- ]/gi, '');
+      item.value = item.value.replace(/[^а-я ]/gi, '');
       item.onblur = () => {
         item.value = checkFunc(checkHyphenSpace(item.value));
         item.value = checkName(item.value);
@@ -346,7 +346,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
   userPhone.forEach(item => {
     item.addEventListener('input', () => {
-      item.value = item.value.replace(/[^0-9()-]/gi, '');
+      item.value = item.value.replace(/[^+0-9()-]/gi, '');
       item.onblur = () => {
         item.value = checkFunc(checkHyphenSpace(item.value));
       };
@@ -354,7 +354,7 @@ window.addEventListener('DOMContentLoaded', () => {
   });
 
   form2Message.addEventListener('input', () => {
-    form2Message.value = form2Message.value.replace(/[^а-я\- ]/gi, '');
+    form2Message.value = form2Message.value.replace(/[a-z]/gi, '');
     form2Message.onblur = () => {
       form2Message.value = checkFunc(checkHyphenSpace(form2Message.value));
     };
@@ -377,7 +377,7 @@ window.addEventListener('DOMContentLoaded', () => {
     const updateCounter = num => {
       totalValue.innerText = '0';
       const target = num,
-        increment = 100;
+        increment = 500;
       let total = +totalValue.innerText;
 
       const interval = setInterval(() => {
@@ -431,4 +431,144 @@ window.addEventListener('DOMContentLoaded', () => {
   };
 
   calc(100);
+
+  //send-ajax-form
+
+  const sendForm = () => {
+    const errorMessage = 'Что-то пошло не так...',
+      successMessage = 'Спасибо, мы скоро с вами свяжемся!';
+
+    const loadMessage = document.createElement('div');
+    loadMessage.classList.add('rotating');
+    loadMessage.innerHTML = `
+    <div class='sk-folding-cube'>
+      <div class='sk-cube sk-cube-1'></div>
+      <div class='sk-cube sk-cube-2'></div>
+      <div class='sk-cube sk-cube-4'></div>
+      <div class='sk-cube sk-cube-3'></div>
+    </div>
+  `;
+
+    const form1 = document.getElementById('form1'),
+      form2 = document.getElementById('form2'),
+      form3 = document.getElementById('form3'),
+      rotating = document.querySelector('.rotating');
+
+    const statusMessage = document.createElement('div');
+    statusMessage.style.cssText = `
+    font-size: 2rem; 
+    color: #fff;`;
+
+    const clearInputs = form => {
+      for (const input of form) {
+        if (input.tagName === 'INPUT') {
+          input.value = '';
+        }
+      }
+    };
+
+    const lastMessage = (form, msg) => {
+      rotating.style.display = 'none';
+      statusMessage.textContent = msg;
+    };
+
+    form1.addEventListener('submit', event => {
+      event.preventDefault();
+      statusMessage.textContent = '';
+      form1.appendChild(statusMessage);
+
+      rotating.style.display = 'block';
+      const formData = new FormData(form1),
+        body = {};
+
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      postData(body, () => {
+        lastMessage(form1, successMessage);
+        clearInputs(form1);
+      }, error => {
+        lastMessage(form1, errorMessage);
+        clearInputs(form1);
+        console.error(error);
+      });
+    });
+
+    form2.addEventListener('submit', event => {
+      event.preventDefault();
+      statusMessage.textContent = '';
+      form2.appendChild(statusMessage);
+
+      rotating.style.display = 'block';
+      const formData = new FormData(form2),
+        body = {};
+
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      postData(body, () => {
+        lastMessage(form2, successMessage);
+        clearInputs(form2);
+      }, error => {
+        lastMessage(form2, errorMessage);
+        clearInputs(form2);
+        console.error(error);
+      });
+    });
+
+    form3.addEventListener('submit', event => {
+      event.preventDefault();
+      statusMessage.textContent = '';
+      form3.appendChild(statusMessage);
+
+      rotating.style.display = 'block';
+      const formData = new FormData(form3),
+        body = {};
+
+      formData.forEach((val, key) => {
+        body[key] = val;
+      });
+
+      postData(body, () => {
+        lastMessage(form3, successMessage);
+        clearInputs(form3);
+        setTimeout(() => {
+          statusMessage.textContent = '';
+        }, 3000);
+      }, error => {
+        lastMessage(form3, errorMessage);
+        clearInputs(form3);
+        setTimeout(() => {
+          statusMessage.textContent = '';
+        }, 3000);
+        console.error(error);
+      });
+    });
+
+    const postData = (body, outputData, errorData) => {
+      const request = new XMLHttpRequest();
+
+      request.addEventListener('readystatechange', () => {
+
+        if (request.readyState !== 4) {
+          return;
+        }
+
+        if (request.status === 200) {
+          outputData();
+        } else {
+          errorData(request.status);
+
+        }
+      });
+
+      request.open('POST', './server.php');
+      request.setRequestHeader('Content-Type', 'application/json');
+      request.send(JSON.stringify(body));
+    };
+  };
+
+  sendForm();
 });
