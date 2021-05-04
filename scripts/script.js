@@ -468,13 +468,24 @@ window.addEventListener('DOMContentLoaded', () => {
 
   const sendForm = () => {
     const errorMessage = 'Что-то пошло не так...',
-      loadMessage = 'Загрузка...',
       successMessage = 'Спасибо, мы скоро с вами свяжемся!';
+
+    const loadMessage = document.createElement('div');
+    loadMessage.classList.add('rotating');
+    loadMessage.innerHTML = `
+    <div class='sk-folding-cube'>
+      <div class='sk-cube sk-cube-1'></div>
+      <div class='sk-cube sk-cube-2'></div>
+      <div class='sk-cube sk-cube-4'></div>
+      <div class='sk-cube sk-cube-3'></div>
+    </div>
+    `;
 
     const form1 = document.getElementById('form1'),
       form2 = document.getElementById('form2'),
       form3 = document.getElementById('form3'),
-      popup = document.querySelector('.popup');
+      popup = document.querySelector('.popup'),
+      rotating = document.querySelector('.rotating');
 
     const statusMessage = document.createElement('div');
     statusMessage.style.cssText = `
@@ -497,10 +508,17 @@ window.addEventListener('DOMContentLoaded', () => {
       }, 4000);
     };
 
+    const lastMessage = () => {
+      rotating.style.display = 'none';
+
+    };
+
     form1.addEventListener('submit', event => {
       event.preventDefault();
+      statusMessage.textContent = '';
       form1.appendChild(statusMessage);
-      statusMessage.textContent = loadMessage;
+      rotating.style.display = 'block';
+
       const formData = new FormData(form1),
         body = {};
 
@@ -514,8 +532,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     form2.addEventListener('submit', event => {
       event.preventDefault();
+      statusMessage.textContent = '';
       form2.appendChild(statusMessage);
-      statusMessage.textContent = loadMessage;
+      rotating.style.display = 'block';
+
       const formData = new FormData(form2),
         body = {};
 
@@ -529,8 +549,10 @@ window.addEventListener('DOMContentLoaded', () => {
 
     form3.addEventListener('submit', event => {
       event.preventDefault();
+      statusMessage.textContent = '';
       form3.appendChild(statusMessage);
-      statusMessage.textContent = loadMessage;
+      rotating.style.display = 'block';
+
       const formData = new FormData(form3),
         body = {};
 
@@ -554,9 +576,11 @@ window.addEventListener('DOMContentLoaded', () => {
             return;
           }
           if (request.status === 200) {
+            lastMessage();
             clearInputs(form);
             resolve(statusMessage.textContent = successMessage);
           } else {
+            lastMessage();
             clearInputs(form);
             reject(statusMessage.textContent = errorMessage);
 
