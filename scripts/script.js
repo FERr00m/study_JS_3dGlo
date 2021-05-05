@@ -526,8 +526,21 @@ window.addEventListener('DOMContentLoaded', () => {
         body[key] = val;
       });
 
-      postData(body, form1)
-        .catch(error => console.warn(error));
+      postData(body)
+        .then(response => {
+          if (response.status !== 200) {
+            throw new Error('status Network not 200');
+          }
+          lastMessage();
+          clearInputs(form1);
+          statusMessage.textContent = successMessage;
+        })
+        .catch(error => {
+          lastMessage();
+          clearInputs(form1);
+          statusMessage.textContent = errorMessage;
+          console.error(error);
+        });
     });
 
     form2.addEventListener('submit', event => {
@@ -543,8 +556,21 @@ window.addEventListener('DOMContentLoaded', () => {
         body[key] = val;
       });
 
-      postData(body, form2)
-        .catch(error => console.warn(error));
+      postData(body)
+        .then(response => {
+          if (response.status !== 200) {
+            throw new Error('status Network not 200');
+          }
+          lastMessage();
+          clearInputs(form2);
+          statusMessage.textContent = successMessage;
+        })
+        .catch(error => {
+          lastMessage();
+          clearInputs(form2);
+          statusMessage.textContent = errorMessage;
+          console.error(error);
+        });
     });
 
     form3.addEventListener('submit', event => {
@@ -560,36 +586,32 @@ window.addEventListener('DOMContentLoaded', () => {
         body[key] = val;
       });
 
-      postData(body, form3)
-        .catch(error => console.warn(error));
+      postData(body)
+        .then(response => {
+          if (response.status !== 200) {
+            throw new Error('status Network not 200');
+          }
+          lastMessage();
+          clearInputs(form3);
+          statusMessage.textContent = successMessage;
+        })
+        .catch(error => {
+          lastMessage();
+          clearInputs(form3);
+          statusMessage.textContent = errorMessage;
+          console.error(error);
+        });
     });
 
     // eslint-disable-next-line arrow-body-style
-    const postData = (body, form) => {
-      return new Promise((resolve, reject) => {
-        const request = new XMLHttpRequest();
-
-        request.open('POST', './server.php');
-        request.setRequestHeader('Content-Type', 'application/json');
-        request.addEventListener('readystatechange', () => {
-          if (request.readyState !== 4) {
-            return;
-          }
-          if (request.status === 200) {
-            lastMessage();
-            clearInputs(form);
-            resolve(statusMessage.textContent = successMessage);
-          } else {
-            lastMessage();
-            clearInputs(form);
-            reject(statusMessage.textContent = errorMessage);
-
-          }
-        });
-
-        request.send(JSON.stringify(body));
+    const postData = body => {
+      return fetch('./server.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(body)
       });
-
     };
   };
 
