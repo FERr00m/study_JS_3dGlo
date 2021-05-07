@@ -23,6 +23,11 @@ const formValidation = () => {
       if (event.type === "blur" && this.value.length < 5) {
         this.value = "";
       }
+      if (this.value.length !== 18) {
+        this.setCustomValidity('Введите номер телефона в формате +7 (***) ***-**-**');
+      } else {
+        this.setCustomValidity('');
+      }
     }
 
     for (const elem of elems) {
@@ -87,6 +92,11 @@ const formValidation = () => {
   userMail.forEach(item => {
     item.addEventListener('input', () => {
       item.value = item.value.replace(/[^a-z@\-_.!~*'0-9]/gi, '');
+      if (!/^\w+@\w+.\w{2,}$/.test(item.value)) {
+        item.setCustomValidity('Введите почту в формате example@example.com');
+      } else {
+        item.setCustomValidity('');
+      }
       item.onblur = () => {
         item.value = checkFunc(checkHyphenSpace(item.value));
       };
