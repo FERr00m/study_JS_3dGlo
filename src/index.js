@@ -12,6 +12,7 @@ import calcValidation from './modules/calcValidation';
 import formValidation from './modules/formValidation';
 import calc from './modules/calc';
 import sendForm from './modules/sendForm';
+import SliderCarousel from './modules/sliderCarousel';
 
 //timer
 countTimer('29 may 2021');
@@ -45,3 +46,29 @@ calc(100);
 
 //send-ajax-form
 sendForm();
+
+//sliderCarousel
+const options = {
+  main: '.companies-wrapper',
+  wrap: '.companies-hor',
+  slidesToShow: 4,
+  infinity: true,
+  responsive: [
+    {
+      breakpoint: 1024,
+      slidesToShow: 3,
+    },
+    {
+      breakpoint: 768,
+      slidesToShow: 2,
+    },
+    {
+      breakpoint: 576,
+      slidesToShow: 1,
+    }
+  ]
+};
+
+const carousel = new SliderCarousel(options);
+
+carousel.init();
